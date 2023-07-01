@@ -5,6 +5,44 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sound Board</title>
+    <link rel="stylesheet" href="./node_modules/tailwindcss/tailwind.css" />
   </head>
-  <body></body>
+  <body class="flex min-h-screen bg-indigo-400">
+    <div
+      id="buttons"
+      class="flex flex-wrap items-center justify-center gap-8 p-4 m-auto"
+    ></div>
+
+    <script>
+      const sounds = ["applause", "boo", "gasp", "tada", "victory", "wrong"];
+      let playingAudio = null;
+      const removePlayingAudioRef = () => {
+        playingAudio = null;
+      };
+      const buttons = document.querySelector("#buttons");
+
+      sounds.forEach((sound, index) => {
+        const audio = document.createElement("audio");
+        audio.id = sound;
+        audio.src = `/sounds/${sound}.mp3`;
+        const button = document.createElement("button");
+        button.className =
+          "px-10 py-6 text-2xl font-medium text-white bg-indigo-700 rounded hover:bg-indigo-800";
+        button.textContent = sound;
+        button.onclick = () => {
+          if (playingAudio) {
+            playingAudio.pause();
+            playingAudio.currentTime = 0;
+            playingAudio.removeEventListener("ended", removePlayingAudioRef);
+          }
+          playingAudio = audio;
+          playingAudio.play();
+          playingAudio.addEventListener("ended", removePlayingAudioRef);
+        };
+
+        document.body.appendChild(audio);
+        buttons.appendChild(button);
+      });
+    </script>
+  </body>
 </html>
